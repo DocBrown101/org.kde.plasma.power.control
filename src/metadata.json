@@ -1,0 +1,21 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "docbrown@tutanota.de",
+                "Name": "DocBrown101 (Daniel)"
+            }
+        ],
+        "Category": "System Information",
+        "Description": "Quick power control widget with restart and shutdown buttons",
+        "Icon": "system-shutdown",
+        "Id": "org.kde.plasma.power.control",
+        "License": "MIT",
+        "Name": "Power Control",
+        "Version": "0.8",
+        "Website": "https://github.com/DocBrown101/org.kde.plasma.power.control",
+        "BugReportUrl": "https://github.com/DocBrown101/org.kde.plasma.power.control/issues"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "KPackageStructure": "Plasma/Applet"
+}
