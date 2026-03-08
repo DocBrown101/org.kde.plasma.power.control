@@ -75,16 +75,6 @@ Item {
                 color: mouseArea.containsMouse ? "#ffffff" : Qt.rgba(1, 1, 1, 0.75)
                 Behavior on color { ColorAnimation { duration: 150 } }
             }
-
-            // Double-click hint
-            Text {
-                text: "×2"
-                font.pixelSize: 9
-                font.letterSpacing: 0.5
-                color: Qt.rgba(1, 1, 1, 0.22)
-                opacity: mouseArea.containsMouse ? 1 : 0
-                Behavior on opacity { NumberAnimation { duration: 200 } }
-            }
         }
     }
 

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.private.sessions as Sessions
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.ksvg as KSvg
@@ -12,6 +13,7 @@ PlasmoidItem {
     width: 200
     height: 220
     preferredRepresentation: fullRepresentation
+    Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
 
     // ── Compact icon in the panel ───────────────────────────────────────────
     compactRepresentation: Item {
@@ -42,9 +44,6 @@ PlasmoidItem {
             color: Qt.rgba(0.07, 0.07, 0.10, 0.97)
             border.color: Qt.rgba(1, 1, 1, 0.07)
             border.width: 1
-
-            layer.enabled: true
-            layer.effect: null
         }
 
         // Subtle top accent line
@@ -65,32 +64,38 @@ PlasmoidItem {
             spacing: 16
 
             // ── Header ──────────────────────────────────────────────────
-            ColumnLayout {
+            Item {
                 Layout.fillWidth: true
-                spacing: 2
+                implicitHeight: headerCol.implicitHeight
 
-                Text {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: "Power Control"
-                    font.pixelSize: 17
-                    font.weight: Font.Light
-                    font.letterSpacing: 2.5
-                    color: "#e8eaf0"
-                }
+                Column {
+                    id: headerCol
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: 2
 
-                Rectangle {
-                    Layout.alignment: Qt.AlignHCenter
-                    width: 40
-                    height: 1
-                    color: Qt.rgba(1, 1, 1, 0.12)
-                }
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Power Control"
+                        font.pixelSize: 17
+                        font.weight: Font.Light
+                        font.letterSpacing: 2.5
+                        color: "#e8eaf0"
+                    }
 
-                Text {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: "Doppelklick zum Ausführen"
-                    font.pixelSize: 9
-                    font.letterSpacing: 0.8
-                    color: Qt.rgba(1, 1, 1, 0.3)
+                    Rectangle {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: 40
+                        height: 1
+                        color: Qt.rgba(1, 1, 1, 0.12)
+                    }
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Doppelklick zum Ausführen"
+                        font.pixelSize: 9
+                        font.letterSpacing: 0.8
+                        color: Qt.rgba(1, 1, 1, 0.3)
+                    }
                 }
             }
 
