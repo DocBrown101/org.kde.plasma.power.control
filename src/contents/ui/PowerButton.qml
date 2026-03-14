@@ -4,13 +4,21 @@ import org.kde.kirigami as Kirigami
 
 Item {
     id: btn
-    height: 58
+    implicitHeight: compact ? 32 : 58
+    Layout.minimumHeight: compact ? 28 : 40
 
     property string buttonLabel: "Button"
     property string iconName: "system-shutdown"
     property color accentColor: "#5e9eff"
+    property bool compact: false
+    property bool lightMode: false
 
     signal doubleClicked()
+
+    ColorPalette {
+        id: palette
+        lightMode: btn.lightMode
+    }
 
     // Glow layer (behind everything)
     Rectangle {
@@ -29,11 +37,11 @@ Item {
     Rectangle {
         id: bgRect
         anchors.fill: parent
-        radius: 12
-        color: Qt.rgba(1, 1, 1, 0.04)
+        radius: btn.compact ? 8 : 12
+        color: palette.buttonBody
         border.color: mouseArea.containsMouse
                       ? Qt.rgba(btn.accentColor.r, btn.accentColor.g, btn.accentColor.b, 0.45)
-                      : Qt.rgba(1, 1, 1, 0.08)
+                      : palette.buttonBorderIdle
         border.width: 1
 
         Behavior on color  { ColorAnimation  { duration: 150 } }
@@ -42,10 +50,9 @@ Item {
         // Subtle left accent stripe
         Rectangle {
             anchors.left: parent.left
-            anchors.leftMargin: 0
             anchors.verticalCenter: parent.verticalCenter
             width: 3
-            height: 28
+            height: btn.compact ? 16 : 28
             radius: 2
             color: btn.accentColor
             opacity: mouseArea.containsMouse ? 0.9 : 0.4
@@ -54,25 +61,25 @@ Item {
 
         RowLayout {
             anchors.fill: parent
-            anchors.leftMargin: 16
-            anchors.rightMargin: 14
-            spacing: 12
+            anchors.leftMargin: btn.compact ? 8 : 16
+            anchors.rightMargin: btn.compact ? 8 : 14
+            spacing: btn.compact ? 6 : 10
 
             Kirigami.Icon {
                 source: btn.iconName
-                width: 22
-                height: 22
-                color: mouseArea.containsMouse ? btn.accentColor : Qt.rgba(1, 1, 1, 0.7)
+                width:  btn.compact ? 18 : 22
+                height: btn.compact ? 18 : 22
+                color: mouseArea.containsMouse ? btn.accentColor : palette.buttonIconIdle
                 Behavior on color { ColorAnimation { duration: 150 } }
             }
 
             Text {
                 Layout.fillWidth: true
                 text: btn.buttonLabel
-                font.pixelSize: 13
+                font.pixelSize: btn.compact ? 11 : 13
                 font.weight: Font.Normal
                 font.letterSpacing: 0.5
-                color: mouseArea.containsMouse ? "#ffffff" : Qt.rgba(1, 1, 1, 0.75)
+                color: mouseArea.containsMouse ? palette.buttonTextHover : palette.buttonTextIdle
                 Behavior on color { ColorAnimation { duration: 150 } }
             }
         }
@@ -104,8 +111,8 @@ Item {
             btn.doubleClicked()
         }
         // Scale feedback on press
-        onPressed:  bgRect.scale = 0.97
-        onReleased: bgRect.scale = 1.0
+        onPressed:  btn.scale = 0.97
+        onReleased: btn.scale = 1.0
     }
 
     Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutCubic } }

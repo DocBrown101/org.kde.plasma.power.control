@@ -12,7 +12,7 @@
         "Id": "org.kde.plasma.power.control",
         "License": "MIT",
         "Name": "Power Control",
-        "Version": "0.9.1",
+        "Version": "0.9.5",
         "Website": "https://github.com/DocBrown101/org.kde.plasma.power.control",
         "BugReportUrl": "https://github.com/DocBrown101/org.kde.plasma.power.control/issues"
     },

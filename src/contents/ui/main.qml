@@ -1,11 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.private.sessions as Sessions
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.ksvg as KSvg
 import org.kde.kirigami as Kirigami
 
 PlasmoidItem {
@@ -34,82 +31,98 @@ PlasmoidItem {
         id: fullRoot
         implicitWidth: 220
         implicitHeight: 240
-        Layout.minimumWidth: 200
-        Layout.minimumHeight: 220
+        Layout.minimumWidth: 180
+        Layout.minimumHeight: 120
+        clip: true
+
+        property bool compactMode: height < 160
+        readonly property bool lightMode: Plasmoid.configuration.backgroundStyle === "light"
+        readonly property real bgOpacity: Plasmoid.configuration.backgroundOpacity
+
+        ColorPalette {
+            id: palette
+            lightMode: fullRoot.lightMode
+            bgOpacity: fullRoot.bgOpacity
+        }
 
         // Background
         Rectangle {
             anchors.fill: parent
-            radius: 16
-            color: Qt.rgba(0.07, 0.07, 0.10, 0.97)
-            border.color: Qt.rgba(1, 1, 1, 0.07)
+            radius: Math.min(16, parent.width * 0.075, parent.height * 0.075)
+            color: palette.widgetBackground
+            border.color: palette.widgetBorder
             border.width: 1
+
+            Behavior on color        { ColorAnimation { duration: 200 } }
+            Behavior on border.color { ColorAnimation { duration: 200 } }
         }
 
         // Subtle top accent line
         Rectangle {
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.topMargin: 0
             width: 80
             height: 2
             radius: 1
-            color: "#5e9eff"
+            color: palette.accentBlue
             opacity: 0.7
         }
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 20
-            spacing: 16
+            anchors.margins: fullRoot.compactMode ? 12 : 20
+            spacing: fullRoot.compactMode ? 8 : 16
+
 
             // ── Header ──────────────────────────────────────────────────
-            Item {
+            Column {
                 Layout.fillWidth: true
-                implicitHeight: headerCol.implicitHeight
+                Layout.alignment: Qt.AlignHCenter
+                spacing: 2
 
-                Column {
-                    id: headerCol
+                Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    spacing: 2
+                    text: "Power Control"
+                    font.pixelSize: fullRoot.compactMode ? 13 : 17
+                    font.weight: Font.Light
+                    font.letterSpacing: fullRoot.compactMode ? 1.5 : 2.5
+                    color: palette.headerText
+                    Behavior on color { ColorAnimation { duration: 200 } }
+                }
 
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Power Control"
-                        font.pixelSize: 17
-                        font.weight: Font.Light
-                        font.letterSpacing: 2.5
-                        color: "#e8eaf0"
-                    }
+                Rectangle {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: 40
+                    height: 1
+                    color: palette.divider
+                    visible: !fullRoot.compactMode
+                    Behavior on color { ColorAnimation { duration: 200 } }
+                }
 
-                    Rectangle {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: 40
-                        height: 1
-                        color: Qt.rgba(1, 1, 1, 0.12)
-                    }
-
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Doppelklick zum Ausführen"
-                        font.pixelSize: 9
-                        font.letterSpacing: 0.8
-                        color: Qt.rgba(1, 1, 1, 0.3)
-                    }
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Doppelklick zum Ausführen"
+                    font.pixelSize: 9
+                    font.letterSpacing: 0.8
+                    color: palette.subtitleText
+                    visible: !fullRoot.compactMode
+                    Behavior on color { ColorAnimation { duration: 200 } }
                 }
             }
 
             // ── Buttons ─────────────────────────────────────────────────
             ColumnLayout {
                 Layout.fillWidth: true
-                spacing: 10
+                spacing: fullRoot.compactMode ? 6 : 10
 
                 // Restart Button
                 PowerButton {
                     Layout.fillWidth: true
                     buttonLabel: "Neu starten"
                     iconName: "system-reboot"
-                    accentColor: "#5e9eff"
+                    accentColor: palette.accentBlue
+                    compact: fullRoot.compactMode
+                    lightMode: fullRoot.lightMode
                     onDoubleClicked: session.requestReboot()
                 }
 
@@ -118,7 +131,9 @@ PlasmoidItem {
                     Layout.fillWidth: true
                     buttonLabel: "Herunterfahren"
                     iconName: "system-shutdown"
-                    accentColor: "#ff6b6b"
+                    accentColor: palette.accentRed
+                    compact: fullRoot.compactMode
+                    lightMode: fullRoot.lightMode
                     onDoubleClicked: session.requestShutdown()
                 }
             }
